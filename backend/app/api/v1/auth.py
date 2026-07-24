@@ -27,6 +27,7 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 class TokenExchangeRequest(BaseModel):
     code: str
     redirect_uri: str
+    code_verifier: str | None = None
 
 
 class TokenResponse(BaseModel):
@@ -59,7 +60,12 @@ async def exchange_token(
                     "code": body.code,
                     "redirect_uri": body.redirect_uri,
                     "client_id": settings.keycloak_client_id,
-                    "client_secret": settings.keycloak_client_secret,
+                    # Public PKCE client — send verifier instead of secret
+                    **(  # type: ignore[arg-type]
+                        {"code_verifier": body.code_verifier}
+                        if body.code_verifier
+                        else {"client_secret": settings.keycloak_client_secret}
+                    ),
                 },
             )
             resp.raise_for_status()

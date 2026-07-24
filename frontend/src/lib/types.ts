@@ -20,10 +20,10 @@ export type ZTNodeType =
 
 export interface NodeData {
   label: string;
-  node_type: ZTNodeType;
-  properties: Record<string, unknown>;
+  node_type: "identity" | "device" | "application" | "data" | "network_segment" | "policy_gate";
   compliance_status?: string;
   classification?: string;
+  [key: string]: unknown;
 }
 
 export interface EdgePolicy {

@@ -40,6 +40,7 @@ def create_app() -> FastAPI:
         docs_url="/api/docs" if settings.debug else None,
         redoc_url="/api/redoc" if settings.debug else None,
         lifespan=lifespan,
+        redirect_slashes=False,
     )
 
     # ── CORS ─────────────────────────────────────────────────
@@ -103,7 +104,7 @@ def create_app() -> FastAPI:
         logger=False,  # We use our own structured logging
     )
     collab = CollabManager(sio)
-    sio_app = socketio.ASGIApp(sio, other_app=app)
+    sio_app = socketio.ASGIApp(sio, other_asgi_app=app)
 
     # Store on app for access in tests
     app.state.sio = sio
