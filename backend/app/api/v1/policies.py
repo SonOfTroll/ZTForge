@@ -20,7 +20,7 @@ from app.schemas.policy import PolicyCreate, PolicyResponse, PolicyUpdate
 router = APIRouter(prefix="/policies", tags=["policies"])
 
 
-@router.post("/", response_model=PolicyResponse, status_code=201)
+@router.post("", response_model=PolicyResponse, status_code=201)
 async def create_policy(
     body: PolicyCreate,
     user: Annotated[TokenPayload, Depends(check_rate_limit)],
