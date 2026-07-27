@@ -7,15 +7,19 @@ fully production-ready yet.
 """
 
 from functools import lru_cache
+from pathlib import Path
 from typing import Literal
 
 from pydantic import Field, PostgresDsn, RedisDsn, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Resolve the project-root .env regardless of the working directory at runtime
+_ENV_FILE = Path(__file__).parents[3] / ".env"
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
+        env_file=_ENV_FILE,
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
@@ -27,7 +31,7 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
     secret_key: str = Field(min_length=16)
-    allowed_origins: list[str] = ["http://localhost:5173"]
+    allowed_origins: str | list[str] = ["http://localhost:5173"]
     backend_host: str = "0.0.0.0"
     backend_port: int = 8000
 

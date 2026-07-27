@@ -19,6 +19,7 @@ node_modules/
 # Build output
 frontend/dist/
 *.js.map
+*.tsbuildinfo
 
 # Environment
 .env

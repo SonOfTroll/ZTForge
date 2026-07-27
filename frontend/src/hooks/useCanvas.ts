@@ -30,15 +30,15 @@ interface UseCanvasOptions {
 }
 
 export function useCanvas({ canvasId, userId, displayName }: UseCanvasOptions) {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
+const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const [canvas, setCanvas] = useState<Canvas | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [collaborators, setCollaborators] = useState<Record<string, CollabUser>>({});
   const [saving, setSaving] = useState(false);
   const versionRef = useRef(1);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   // Load canvas from API
   useEffect(() => {
@@ -54,20 +54,20 @@ export function useCanvas({ canvasId, userId, displayName }: UseCanvasOptions) {
         versionRef.current = data.version;
 
         // Map backend nodes to React Flow nodes
-        const rfNodes: Node[] = (data.nodes || []).map((n: Record<string, unknown>) => ({
-          id: n.id as string,
-          type: (n.data as Record<string, unknown>)?.node_type as string || "identity",
-          position: n.position as { x: number; y: number },
+        const rfNodes: Node[] = (data.nodes || []).map((n) => ({
+          id: n.id,
+          type: n.data?.node_type || "identity",
+          position: n.position,
           data: n.data,
         }));
         setNodes(rfNodes);
 
-        const rfEdges: Edge[] = (data.edges || []).map((e: Record<string, unknown>) => ({
-          id: e.id as string,
-          source: e.source as string,
-          target: e.target as string,
-          label: e.label as string | undefined,
-          animated: e.animated as boolean | undefined,
+        const rfEdges: Edge[] = (data.edges || []).map((e) => ({
+          id: e.id,
+          source: e.source,
+          target: e.target,
+          label: e.label,
+          animated: e.animated,
           data: { policy: e.policy },
         }));
         setEdges(rfEdges);

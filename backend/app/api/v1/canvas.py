@@ -25,7 +25,7 @@ from app.utils.validators import validate_canvas_edges, validate_canvas_nodes
 router = APIRouter(prefix="/canvases", tags=["canvas"])
 
 
-@router.post("/", response_model=CanvasResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=CanvasResponse, status_code=status.HTTP_201_CREATED)
 async def create_canvas(
     body: CanvasCreate,
     user: Annotated[TokenPayload, Depends(check_rate_limit)],
@@ -52,7 +52,7 @@ async def create_canvas(
     return canvas
 
 
-@router.get("/", response_model=list[CanvasListItem])
+@router.get("", response_model=list[CanvasListItem])
 async def list_canvases(
     user: Annotated[TokenPayload, Depends(check_rate_limit)],
     db: Annotated[AsyncSession, Depends(get_db)],

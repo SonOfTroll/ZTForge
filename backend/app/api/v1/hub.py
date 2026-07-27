@@ -95,9 +95,9 @@ async def fork_template(
 @router.get("/export/{canvas_id}")
 async def export_canvas_config(
     canvas_id: uuid.UUID,
-    format: str = Query(pattern=r"^(rego|pomerium|terraform|iptables)$"),
     user: Annotated[TokenPayload, Depends(check_rate_limit)],
     db: Annotated[AsyncSession, Depends(get_db)],
+    format: str = Query(pattern=r"^(rego|pomerium|terraform|iptables)$"),
 ):
     """Export canvas as production-ready config in the specified format."""
     from app.models.canvas import Canvas
